@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return valid;
     }
 
-    // Validate on blur for inline feedback
+    // Inline validation on blur
     Object.values(fields).forEach(function (field) {
         field.el.addEventListener('blur', validateAll);
     });
@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         if (!validateAll()) {
-            // Focus first invalid field
             const firstInvalid = form.querySelector('.invalid');
             if (firstInvalid) firstInvalid.focus();
             return;
@@ -85,11 +84,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log('[Contact Form] Submission:', payload);
 
-        // Show success state
+        // Show success, hide button
         submitBtn.hidden = true;
         successMsg.hidden = false;
 
-        // Reset form values and error states
+        // Reset form and clear error states
         form.reset();
         Object.values(fields).forEach(function (field) {
             field.el.classList.remove('invalid');
