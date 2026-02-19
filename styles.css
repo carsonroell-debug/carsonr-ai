@@ -163,18 +163,25 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.12;
     letter-spacing: -0.03em;
     color: var(--text-primary);
 }
 
 .hero-sub {
-    font-size: clamp(1.0625rem, 2vw, 1.25rem);
+    font-size: clamp(1rem, 1.75vw, 1.125rem);
     color: var(--text-secondary);
     max-width: 500px;
     line-height: 1.65;
+}
+
+.hero-positioning {
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    line-height: 1.6;
 }
 
 .hero-cta-group {
@@ -550,62 +557,31 @@ body {
    FOOTER
 ════════════════════════════════════════ */
 .footer {
-    padding: var(--s8) 0;
+    padding: var(--s6) 0;
     background: var(--bg-white);
     border-top: 1px solid var(--border);
 }
 
 .footer-inner {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: var(--s2);
-    text-align: center;
-}
-
-.footer-text {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-}
-
-.footer-privacy {
+    justify-content: space-between;
+    gap: var(--s4) var(--s8);
+    flex-wrap: wrap;
     font-size: 0.8125rem;
     color: var(--text-muted);
-    max-width: 520px;
-    line-height: 1.55;
+    opacity: 0.85;
 }
 
-.footer-privacy-label {
-    font-weight: 600;
-    color: var(--text-secondary);
-}
+.footer-copy { white-space: nowrap; }
 
-.footer-projects {
-    margin-top: var(--s6);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    opacity: 0.8;
-}
+.footer-privacy { flex: 1; min-width: 180px; }
 
-.footer-projects-title {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.footer-projects-desc {
-    font-size: 0.8125rem;
-    color: var(--text-muted);
-}
+.footer-projects { white-space: nowrap; }
 
 .footer-projects-link {
-    font-size: 0.8125rem;
-    font-weight: 500;
     color: var(--text-secondary);
     text-decoration: none;
-    margin-top: 0.125rem;
     transition: color 0.15s;
 }
 .footer-projects-link:hover {
