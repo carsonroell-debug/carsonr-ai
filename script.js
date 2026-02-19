@@ -1,86 +1,98 @@
-// Contact Form Handler
-document.addEventListener('DOMContentLoaded', function() {
-    const contactForm = document.getElementById('contactForm');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            
-            // Create mailto link
-            const subject = encodeURIComponent('Contact from Portfolio');
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-            const mailtoLink = `mailto:carson.roell@gmail.com?subject=${subject}&body=${body}`;
-            
-            // Open email client
-            window.location.href = mailtoLink;
-            
-            // Optional: Show success message
-            const submitButton = contactForm.querySelector('.form-submit-button');
-            const originalText = submitButton.innerHTML;
-            submitButton.innerHTML = 'Message Sent! ✓';
-            submitButton.style.backgroundColor = '#10b981';
-            
-            // Reset form
-            contactForm.reset();
-            
-            // Reset button after 3 seconds
-            setTimeout(() => {
-                submitButton.innerHTML = originalText;
-                submitButton.style.backgroundColor = '';
-            }, 3000);
-        });
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    const fields = {
+        name:    { el: form.querySelector('#name'),    error: form.querySelector('#name-error') },
+        email:   { el: form.querySelector('#email'),   error: form.querySelector('#email-error') },
+        topic:   { el: form.querySelector('#topic'),   error: form.querySelector('#topic-error') },
+        message: { el: form.querySelector('#message'), error: form.querySelector('#message-error') },
+    };
+
+    const successMsg = form.querySelector('#formSuccess');
+    const submitBtn  = form.querySelector('.form-submit-button');
+
+    function isValidEmail(val) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
     }
-    
-    // Hamburger Menu Toggle
-    const navToggle = document.querySelector('.nav-toggle');
-    const siteHeader = document.querySelector('.site-header');
-    const body = document.body;
-    
-    if (navToggle && siteHeader) {
-        navToggle.addEventListener('click', function() {
-            siteHeader.classList.toggle('nav-open');
-            body.classList.toggle('nav-open');
-        });
-        
-        // Close menu when clicking on a nav link (mobile)
-        const navLinks = document.querySelectorAll('.nav-links a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    siteHeader.classList.remove('nav-open');
-                    body.classList.remove('nav-open');
-                }
-            });
-        });
-        
-        // Close menu when clicking outside (mobile)
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768) {
-                if (!siteHeader.contains(e.target) && siteHeader.classList.contains('nav-open')) {
-                    siteHeader.classList.remove('nav-open');
-                    body.classList.remove('nav-open');
-                }
-            }
-        });
+
+    function setError(field, msg) {
+        field.el.classList.toggle('invalid', Boolean(msg));
+        field.error.textContent = msg;
     }
-    
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+
+    function validateAll() {
+        let valid = true;
+
+        if (!fields.name.el.value.trim()) {
+            setError(fields.name, 'Full name is required.');
+            valid = false;
+        } else {
+            setError(fields.name, '');
+        }
+
+        const emailVal = fields.email.el.value.trim();
+        if (!emailVal) {
+            setError(fields.email, 'Email is required.');
+            valid = false;
+        } else if (!isValidEmail(emailVal)) {
+            setError(fields.email, 'Please enter a valid email address.');
+            valid = false;
+        } else {
+            setError(fields.email, '');
+        }
+
+        if (!fields.topic.el.value) {
+            setError(fields.topic, 'Please select a topic.');
+            valid = false;
+        } else {
+            setError(fields.topic, '');
+        }
+
+        if (!fields.message.el.value.trim()) {
+            setError(fields.message, 'Message is required.');
+            valid = false;
+        } else {
+            setError(fields.message, '');
+        }
+
+        return valid;
+    }
+
+    // Validate on blur for inline feedback
+    Object.values(fields).forEach(function (field) {
+        field.el.addEventListener('blur', validateAll);
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!validateAll()) {
+            // Focus first invalid field
+            const firstInvalid = form.querySelector('.invalid');
+            if (firstInvalid) firstInvalid.focus();
+            return;
+        }
+
+        const payload = {
+            name:        fields.name.el.value.trim(),
+            email:       fields.email.el.value.trim(),
+            phone:       form.querySelector('#phone').value.trim() || null,
+            topic:       fields.topic.el.value,
+            message:     fields.message.el.value.trim(),
+            submittedAt: new Date().toISOString(),
+        };
+
+        console.log('[Contact Form] Submission:', payload);
+
+        // Show success state
+        submitBtn.hidden = true;
+        successMsg.hidden = false;
+
+        // Reset form values and error states
+        form.reset();
+        Object.values(fields).forEach(function (field) {
+            field.el.classList.remove('invalid');
         });
     });
 });
-
