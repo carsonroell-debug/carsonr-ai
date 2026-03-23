@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "carsonr-ai",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".", "-l", "3010", "--no-clipboard"],
+      "port": 3010
+    }
+  ]
+}

@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var successMsg = form.querySelector('#formSuccess');
     var submitBtn  = form.querySelector('.form-submit-button');
 
+    if (successMsg) {
+        successMsg.hidden = true;
+    }
+
     function isValidEmail(val) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
     }
@@ -64,6 +68,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inline validation on blur
     Object.values(fields).forEach(function (field) {
         field.el.addEventListener('blur', validateAll);
+        field.el.addEventListener('input', function () {
+            if (successMsg && !successMsg.hidden) {
+                successMsg.hidden = true;
+                submitBtn.hidden = false;
+            }
+        });
     });
 
     form.addEventListener('submit', function (e) {
