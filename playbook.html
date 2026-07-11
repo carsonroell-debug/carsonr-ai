@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Notes: Running Marketing for 11 Products, Alone — Carson Roell</title>
+  <meta name="description" content="How one marketing operator runs content, funnels, and outbound for eleven software products using AI agents — with real numbers, an annotated prompt, and the guardrails that keep it honest.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carsonr.ai/playbook">
+  <meta property="og:title" content="Field Notes: Running Marketing for 11 Products, Alone">
+  <meta property="og:description" content="The system, the real numbers, an annotated prompt, and the guardrails. No buzzwords.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231a1915'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' fill='%23FBFAF7' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #fbfaf7;
+      --ink: #1a1915;
+      --muted: #6d6b62;
+      --rule: #e6e3da;
+      --accent: #234e3f;
+      --accent-soft: #eef2ef;
+      --code-bg: #f2f0ea;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.7;
+      font-size: 16.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 28px; }
+    a { color: inherit; }
+
+    .microlabel {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+    }
+
+    header { border-bottom: 1px solid var(--rule); }
+    .nav { max-width: 880px; margin: 0 auto; padding: 26px 28px; display: flex; align-items: baseline; justify-content: space-between; }
+    .wordmark { font-family: 'Newsreader', Georgia, serif; font-size: 1.35rem; font-weight: 500; text-decoration: none; }
+    .nav nav { display: flex; gap: 28px; }
+    .nav nav a {
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; color: var(--muted); transition: color 0.15s ease;
+    }
+    .nav nav a:hover { color: var(--ink); }
+
+    .hero { padding: 88px 0 68px; border-bottom: 1px solid var(--rule); }
+    .hero h1 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: clamp(2.2rem, 5.5vw, 3.4rem); line-height: 1.1; letter-spacing: -0.02em;
+      margin: 20px 0 26px;
+    }
+    .hero .standfirst { color: var(--muted); font-size: 1.08rem; max-width: 56ch; }
+    .hero .standfirst strong { color: var(--ink); font-weight: 600; }
+    .byline { margin-top: 34px; font-size: 0.85rem; color: var(--muted); }
+
+    article section { padding: 64px 0; border-bottom: 1px solid var(--rule); }
+    article section:last-of-type { border-bottom: none; }
+    h2 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: 1.65rem; letter-spacing: -0.01em; margin-bottom: 26px;
+    }
+    h2 .no { font-style: italic; color: var(--accent); font-size: 1.05rem; margin-right: 14px; }
+    h3 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: 1.25rem; margin: 38px 0 12px;
+    }
+    article p { color: var(--muted); margin-bottom: 18px; max-width: 62ch; }
+    article p strong { color: var(--ink); font-weight: 600; }
+    article p em { font-style: italic; }
+
+    .statrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 30px 0 12px; }
+    .stat { border-top: 2px solid var(--ink); padding-top: 12px; }
+    .stat .n { font-family: 'Newsreader', Georgia, serif; font-size: 1.9rem; font-weight: 500; line-height: 1.1; }
+    .stat .l { font-size: 0.78rem; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin: 28px 0; }
+    .split > div { padding: 24px 26px; }
+    .split > div:first-child { border-right: 1px solid var(--rule); background: var(--accent-soft); }
+    .split h4 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px; }
+    .split > div:first-child h4 { color: var(--accent); }
+    .split ul { list-style: none; }
+    .split li { font-size: 0.9rem; color: var(--muted); padding: 7px 0; border-top: 1px solid var(--rule); }
+    .split > div:first-child li { border-top-color: #dde6df; }
+
+    .prompt-block {
+      background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px;
+      padding: 26px 28px; margin: 28px 0; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; line-height: 1.8; color: var(--ink); overflow-x: auto;
+    }
+    .prompt-block .an { color: var(--accent); user-select: none; }
+    .annotation-list { list-style: none; margin: 0 0 18px; }
+    .annotation-list li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--rule); font-size: 0.92rem; color: var(--muted); }
+    .annotation-list li b { font-family: 'Newsreader', Georgia, serif; font-style: italic; color: var(--accent); font-weight: 500; }
+    .annotation-list li strong { color: var(--ink); }
+
+    blockquote {
+      border-left: 2px solid var(--accent); padding: 4px 0 4px 24px; margin: 30px 0;
+      font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 1.2rem; color: var(--ink);
+      max-width: 54ch;
+    }
+
+    .endcap { padding: 72px 0 84px; }
+    .endcap h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); max-width: 22ch; }
+    .btn {
+      display: inline-block; text-decoration: none; font-size: 0.88rem; font-weight: 600;
+      padding: 13px 26px; border-radius: 4px; transition: background 0.15s ease;
+      background: var(--ink); color: var(--paper); margin-right: 12px;
+    }
+    .btn:hover { background: var(--accent); }
+    .btn-line { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+    .btn-line:hover { background: transparent; border-color: var(--ink); }
+
+    footer { border-top: 1px solid var(--rule); padding: 34px 0 46px; }
+    footer .wrap { max-width: 880px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+
+    @media (max-width: 720px) {
+      .hero { padding: 60px 0 50px; }
+      article section { padding: 50px 0; }
+      .statrow { grid-template-columns: 1fr; gap: 14px; }
+      .split { grid-template-columns: 1fr; }
+      .split > div:first-child { border-right: none; border-bottom: 1px solid var(--rule); }
+      .nav nav { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav">
+      <a class="wordmark" href="/">Carson Roell</a>
+      <nav aria-label="Site navigation">
+        <a href="/#work">Work</a>
+        <a href="/#about">About</a>
+        <a href="/Carson_Roell_Resume.pdf">Resume</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="wrap">
+        <span class="microlabel">Field Notes — July 2026</span>
+        <h1>Running marketing for eleven products, alone.</h1>
+        <p class="standfirst">
+          I operate a portfolio of small software products as a team of one. This is the
+          honest version of how: <strong>what the AI agents do, what they're never allowed to do,
+          and the real numbers</strong> — written for marketers who are tired of "10x your output
+          with AI" posts that never show the work.
+        </p>
+        <p class="byline">Carson Roell · Toronto, ON · <a href="/">carsonr.ai</a></p>
+      </div>
+    </div>
+
+    <article>
+
+      <section>
+        <div class="wrap">
+          <h2><span class="no">01</span>The constraint is the strategy</h2>
+          <p>
+            Eleven products, one person, effectively zero ad budget. That constraint forces a
+            decision most marketing teams never have to make explicitly: <strong>every hour of human
+            attention has to go where judgment matters, and everything else has to run without me.</strong>
+          </p>
+          <p>
+            So I stopped thinking in campaigns and started thinking in systems. A campaign is
+            something you do; a system is something that keeps doing it while you're quoting a
+            painting job or sitting in a discovery call. The rest of these notes describe the
+            three systems that do the heavy lifting, and the one rule that keeps them honest.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2><span class="no">02</span>The division of labour</h2>
+          <p>
+            The split isn't "AI does marketing." The split is a line between <em>production</em>
+            and <em>judgment</em>, drawn deliberately:
+          </p>
+          <div class="split">
+            <div>
+              <h4>Agents produce</h4>
+              <ul>
+                <li>First drafts of outreach and follow-up variants</li>
+                <li>Data collection &amp; report assembly for content</li>
+                <li>Funnel health checks on a 3-hour heartbeat</li>
+                <li>Lead-list enrichment and pipeline hygiene</li>
+                <li>Draft replies queued for review, never sent</li>
+              </ul>
+            </div>
+            <div>
+              <h4>I decide</h4>
+              <ul>
+                <li>Positioning, pricing, and what gets built</li>
+                <li>Which channel gets the next push, and why</li>
+                <li>Every word a customer actually receives</li>
+                <li>When to kill a channel that isn't working</li>
+                <li>What "working" even means — the metric</li>
+              </ul>
+            </div>
+          </div>
+          <p>
+            The output side of that table is where the leverage is. The right side is why it's
+            still marketing and not spam.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2><span class="no">03</span>Three systems, real numbers</h2>
+
+          <h3>i. Content that starts as data, not opinions</h3>
+          <p>
+            For LinkRescue (a broken-affiliate-link monitor), the content engine is a monthly
+            <strong>Link Rot Index</strong>: agents crawl a fixed panel of content sites, check every
+            outbound affiliate link, and assemble the raw findings. I turn the findings into
+            the editorial angle, the post, and the programmatic SEO pages.
+          </p>
+          <div class="statrow">
+            <div class="stat"><div class="n">6,550</div><div class="l">links checked across 50 sites and 683 pages in the June issue</div></div>
+            <div class="stat"><div class="n">5.8%</div><div class="l">of links broken outright — the headline stat the post is built on</div></div>
+            <div class="stat"><div class="n">58%</div><div class="l">of attribution issues were silently lost tracking parameters — the angle nobody else had</div></div>
+          </div>
+          <p>
+            The point: original data is the one content moat a one-person operation can afford.
+            Agents make the data collection free; the insight still has to be found by a human
+            reading the results.
+          </p>
+
+          <h3>ii. A funnel where every stage reports its numbers</h3>
+          <p>
+            AI Commerce Radar (an AI-visibility audit for Etsy/Shopify sellers) launched as a
+            complete measured funnel: free audit → scored, shareable report with social cards →
+            email capture → paid subscription. Before driving any traffic, I set a
+            <strong>14-day validation gate</strong> with pre-committed thresholds — the funnel either
+            earns more investment with data or gets parked without sentiment.
+          </p>
+          <p>
+            An agent heartbeat checks the funnel's health every three hours and pushes a card
+            to my phone when a stage breaks or moves. I don't check dashboards; the dashboard
+            checks in with me.
+          </p>
+
+          <h3>iii. Outbound where personalization is manufactured</h3>
+          <p>
+            For PaintPulse (SMS photo-updates for painting contractors), the classic outbound
+            trade-off is volume versus personalization. The system breaks the trade-off: for
+            each prospect, an agent seeds a <strong>live demo pre-loaded with that company's own
+            branding</strong> before the first email exists.
+          </p>
+          <div class="statrow">
+            <div class="stat"><div class="n">166</div><div class="l">painting contractors researched into the lead database</div></div>
+            <div class="stat"><div class="n">56</div><div class="l">personalized demo sites seeded before first contact</div></div>
+            <div class="stat"><div class="n">1:1</div><div class="l">every email references a demo that already exists for that prospect</div></div>
+          </div>
+          <p>
+            The email itself is short, because the demo does the talking. Cold outreach converts
+            on proof-of-effort, and agents make effort cheap to prove.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2><span class="no">04</span>An annotated prompt</h2>
+          <p>
+            Prompting is the visible 10% of AI skill, but it's the part people ask about, so
+            here's a real pattern — the outreach drafter, condensed. The annotations are the
+            actual craft:
+          </p>
+          <div class="prompt-block">
+You draft cold emails for {product} to {prospect}. <span class="an">&#9312;</span><br>
+Return 3 variants as JSON matching the provided schema. <span class="an">&#9313;</span><br>
+<br>
+Context you may use: {prospect_research}, {demo_url}, {icp_notes} <span class="an">&#9314;</span><br>
+<br>
+Rules:<br>
+- Max 90 words. The demo link carries the pitch. <span class="an">&#9315;</span><br>
+- Reference one specific, verifiable fact about the prospect.<br>
+&nbsp;&nbsp;If research contains none, say so and stop. Do not invent one. <span class="an">&#9316;</span><br>
+- No "I hope this finds you well." No exclamation marks.<br>
+&nbsp;&nbsp;Write like a contractor texting another contractor. <span class="an">&#9317;</span><br>
+- Output is a DRAFT for human review. Never imply it was sent. <span class="an">&#9318;</span>
+          </div>
+          <ul class="annotation-list">
+            <li><b>①</b><span><strong>Role + variables up front.</strong> The template is reused across products; only the variables change. Prompts are infrastructure, not one-offs.</span></li>
+            <li><b>②</b><span><strong>Structured output.</strong> JSON against a schema means drafts flow into the review queue programmatically — no copy-paste step to break.</span></li>
+            <li><b>③</b><span><strong>Explicit context boundary.</strong> The model may only use research it was handed. This is the #1 defence against confident nonsense.</span></li>
+            <li><b>④</b><span><strong>Constraint carries strategy.</strong> The 90-word cap isn't style — it encodes the insight that the personalized demo, not the email, closes.</span></li>
+            <li><b>⑤</b><span><strong>A defined failure mode.</strong> The most important line in the prompt. An agent that can say "not enough information" is worth ten that can't.</span></li>
+            <li><b>⑥</b><span><strong>Voice by example, not adjective.</strong> "Like a contractor texting another contractor" outperforms "friendly and professional" every time.</span></li>
+            <li><b>⑦</b><span><strong>The guardrail, restated in-prompt.</strong> Belt and suspenders: the pipeline already can't send, and the prompt knows it too.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2><span class="no">05</span>The rule that keeps it honest</h2>
+          <blockquote>
+            Nothing outward-facing ships without a human decision. Not an email, not a post,
+            not a deploy. Agents draft; a person sends.
+          </blockquote>
+          <p>
+            This isn't caution theatre — it's the operating rule that makes the whole system
+            defensible. Every automated step leaves an audit trail; every customer-facing word
+            passed through human judgment. When people ask what "responsible AI use" looks like
+            in marketing, I think it looks like this: <strong>maximum leverage on production, zero
+            delegation of accountability.</strong>
+          </p>
+          <p>
+            Stack, for the curious: Claude API &amp; agents · HubSpot CRM · Google Analytics 4 ·
+            Next.js + Vercel · Stripe · a Postgres database and a pile of cron jobs.
+          </p>
+        </div>
+      </section>
+
+    </article>
+
+    <div class="endcap">
+      <div class="wrap">
+        <span class="microlabel">The end — almost</span>
+        <h2>If your team is trying to figure out its own line between agents and judgment, I like talking about this.</h2>
+        <p style="color:var(--muted); max-width:56ch; margin:16px 0 30px;">
+          I'm open to remote marketing roles where this kind of operating leverage is welcome.
+        </p>
+        <a class="btn" href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a>
+        <a class="btn btn-line" href="/">More about me</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year">2026</span> Carson Roell</span>
+      <span>Toronto, ON</span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
