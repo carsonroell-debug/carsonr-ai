@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carson Roell — AI-Native Builder (marketing brain, agent leverage)</title>
+  <meta name="description" content="Marketing operator who ships production software with AI agents — Claude Code daily, Next.js/TypeScript/Postgres systems live and operated solo. Toronto, Eastern Time. Available part-time/contract.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://carsonr.ai/builder">
+  <meta property="og:title" content="Carson Roell — AI-Native Builder">
+  <meta property="og:description" content="I don't write most of my code. I direct the agents that do — and everything below is live, operated, and maintained by one person.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231a1915'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' fill='%23FBFAF7' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #fbfaf7;
+      --ink: #1a1915;
+      --muted: #6d6b62;
+      --rule: #e6e3da;
+      --accent: #234e3f;
+      --accent-soft: #eef2ef;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      font-size: 16.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .serif { font-family: 'Newsreader', Georgia, serif; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 28px; }
+    a { color: var(--ink); }
+
+    .microlabel {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+    }
+
+    header { border-bottom: 1px solid var(--rule); }
+    .nav { display: flex; align-items: baseline; justify-content: space-between; padding: 26px 0; }
+    .wordmark {
+      font-family: 'Newsreader', Georgia, serif; font-size: 1.35rem; font-weight: 500;
+      text-decoration: none; letter-spacing: -0.01em;
+    }
+    .nav nav { display: flex; gap: 28px; }
+    .nav nav a {
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; color: var(--muted); transition: color 0.15s ease;
+    }
+    .nav nav a:hover { color: var(--ink); }
+
+    .hero { padding: 96px 0 88px; border-bottom: 1px solid var(--rule); }
+    .hero h1 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.08; letter-spacing: -0.02em;
+      margin: 22px 0 28px; max-width: 17ch;
+    }
+    .hero .intro { max-width: 58ch; color: var(--muted); margin-bottom: 36px; }
+    .hero .intro strong { color: var(--ink); font-weight: 600; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .btn {
+      display: inline-block; text-decoration: none; font-size: 0.88rem; font-weight: 600;
+      padding: 13px 26px; border-radius: 4px; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-solid { background: var(--ink); color: var(--paper); }
+    .btn-solid:hover { background: var(--accent); }
+    .btn-line { border: 1px solid var(--rule); color: var(--ink); }
+    .btn-line:hover { border-color: var(--ink); }
+    .hero-meta { margin-top: 44px; font-size: 0.85rem; color: var(--muted); }
+    .hero-meta a { color: var(--muted); }
+    .hero-meta a:hover { color: var(--ink); }
+
+    section { padding: 84px 0; border-bottom: 1px solid var(--rule); }
+    .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 56px; }
+    .sec-head .no {
+      font-family: 'Newsreader', Georgia, serif; font-style: italic;
+      font-size: 1rem; color: var(--accent);
+    }
+    .sec-head h2 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: 1.7rem; letter-spacing: -0.01em;
+    }
+
+    .work-item {
+      display: grid; grid-template-columns: 84px 1fr; gap: 24px;
+      padding: 40px 0; border-top: 1px solid var(--rule);
+    }
+    .work-item:first-of-type { border-top: none; padding-top: 0; }
+    .work-no {
+      font-family: 'Newsreader', Georgia, serif; font-style: italic;
+      font-size: 2rem; color: var(--accent); line-height: 1;
+    }
+    .work-item h3 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: 1.45rem; letter-spacing: -0.01em; margin-bottom: 4px;
+    }
+    .work-role { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .work-item p.desc { color: var(--muted); max-width: 62ch; margin-bottom: 18px; }
+    .work-item p.desc strong { color: var(--ink); font-weight: 600; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-size: 0.74rem; font-weight: 500; letter-spacing: 0.04em;
+      background: var(--accent-soft); color: var(--accent);
+      padding: 4px 12px; border-radius: 999px;
+    }
+    .work-link { display: inline-block; margin-top: 16px; margin-right: 18px; font-size: 0.85rem; font-weight: 500; color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+    .work-link:hover { color: var(--ink); }
+
+    .plain p { max-width: 62ch; color: var(--muted); margin-bottom: 20px; }
+    .plain p strong { color: var(--ink); font-weight: 600; }
+
+    blockquote {
+      font-family: 'Newsreader', Georgia, serif; font-size: 1.35rem; line-height: 1.45;
+      max-width: 30ch; color: var(--ink); border-left: 2px solid var(--accent);
+      padding-left: 22px; margin: 34px 0;
+    }
+
+    .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
+    .stack-grid h4 {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink); margin-bottom: 12px;
+    }
+    .stack-grid ul { list-style: none; }
+    .stack-grid li { color: var(--muted); font-size: 0.92rem; padding: 3px 0; }
+
+    footer { padding: 64px 0 80px; }
+    .foot { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; }
+    .foot .links { display: flex; gap: 24px; }
+    .foot a { font-size: 0.85rem; color: var(--muted); text-decoration: none; }
+    .foot a:hover { color: var(--ink); }
+
+    @media (max-width: 640px) {
+      .work-item { grid-template-columns: 1fr; gap: 8px; }
+      .work-no { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="wordmark" href="/">Carson Roell</a>
+    <nav aria-label="Site navigation">
+      <a href="#work">Systems</a>
+      <a href="#method">Method</a>
+      <a href="/Carson_Roell_Resume.pdf">Resume</a>
+      <a href="/">Marketing</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <span class="microlabel">AI-Native Builder · Marketing Brain · Toronto (ET)</span>
+    <h1>I don't write most of my code. I direct the agents that do.</h1>
+    <p class="intro">
+      I'm a marketing operator by training (BComm, Guelph) who ships
+      <strong>production software with AI coding agents</strong> — Claude Code daily,
+      Claude API + MCP in everything. No CS degree, no engineering title, and every system
+      below is <strong>live, solo-built, and operated by me</strong>: deploys, monitoring,
+      billing, and the failure modes at 2 a.m. If you're hiring people who ship with agents
+      rather than despite them, that's the whole profile.
+      <strong>Available 15–25 hrs/wk, contract or part-time, more from August.</strong>
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a>
+      <a class="btn btn-line" href="#work">See what's live</a>
+    </div>
+    <p class="hero-meta">Eastern Time (UTC-5) · Remote-native · <a href="https://www.linkedin.com/in/carson-roell/">LinkedIn</a></p>
+  </div>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head"><span class="no">01</span><h2>Live systems — one person, agent leverage</h2></div>
+
+      <div class="work-item">
+        <div class="work-no">a.</div>
+        <div>
+          <h3>JARVIS — proactive life-OS PWA</h3>
+          <div class="work-role">Next.js · Neon Postgres · Claude API · Web Push · Google Calendar API</div>
+          <p class="desc">
+            A personal operating system as an installable PWA: <strong>natural-language capture,
+            AI-generated daily briefings, cross-device sync, push nudges on cron, and Google
+            Calendar auto time-blocking.</strong> The hard part wasn't features — it was
+            reliability, like diagnosing a push pipeline that conflated permission with
+            subscription and silently swallowed failed sends, then shipping self-healing
+            re-subscribe. I use it every day, which is the most honest QA there is.
+          </p>
+          <div class="tags"><span class="tag">PWA</span><span class="tag">AI briefings</span><span class="tag">Push notifications</span><span class="tag">Cron pipelines</span></div>
+        </div>
+      </div>
+
+      <div class="work-item">
+        <div class="work-no">b.</div>
+        <div>
+          <h3>Foreman — autonomous product-health system</h3>
+          <div class="work-role">Node · scheduled agents · headless Claude pipelines · push dispatch</div>
+          <p class="desc">
+            A heartbeat that health-checks my portfolio of live products every 3 hours — deploy
+            rot, paused databases, auth gaps, funnel metrics — and turns anything needing
+            attention into <strong>one-tap action cards with pre-written payloads, pushed to my
+            phone.</strong> Battle scars included: scheduled tasks silently skipping on battery
+            power, offline runs painting false all-red alerts, and a dueling-systemd-unit
+            restart loop on a remote agent VPS (656 restarts) traced and killed.
+          </p>
+          <div class="tags"><span class="tag">Agent orchestration</span><span class="tag">Observability</span><span class="tag">Headless LLM</span><span class="tag">Ops debugging</span></div>
+        </div>
+      </div>
+
+      <div class="work-item">
+        <div class="work-no">c.</div>
+        <div>
+          <h3>LinkRescue — affiliate-link integrity SaaS</h3>
+          <div class="work-role">TypeScript monorepo · custom crawler · Stripe · Vercel</div>
+          <p class="desc">
+            Network-agnostic link-rot monitoring for affiliate publishers, including real crawler
+            infrastructure: <strong>time-budgeted scans with graceful partial results, parallel
+            link checking with a concurrency-safe domain limiter, and a tiered honest-bot →
+            browser-profile retry strategy.</strong> Its monthly data study checks ~6,500 links
+            across 50 sites and feeds a published index — the marketing engine and the product
+            are the same machine, which is very much the point of me.
+          </p>
+          <div class="tags"><span class="tag">Crawler infra</span><span class="tag">Data pipeline</span><span class="tag">SEO engine</span><span class="tag">Stripe tiers</span></div>
+          <a class="work-link" href="https://www.linkrescue.io">linkrescue.io</a>
+        </div>
+      </div>
+
+      <div class="work-item">
+        <div class="work-no">d.</div>
+        <div>
+          <h3>AI Commerce Radar — AI audit funnel</h3>
+          <div class="work-role">Next.js · Claude structured outputs · OG image generation · Stripe</div>
+          <p class="desc">
+            Paste an Etsy/Shopify listing → Claude grades six visibility dimensions and
+            <strong>simulates buyer queries against the listing</strong> → a shareable scored
+            report with dynamically rendered OG cards, email capture, and checkout. Designed as
+            a growth loop first and a product second: every report is its own distribution.
+          </p>
+          <div class="tags"><span class="tag">Structured outputs</span><span class="tag">Dynamic OG images</span><span class="tag">Funnel design</span></div>
+          <a class="work-link" href="https://ai-commerce-radar.vercel.app">ai-commerce-radar.vercel.app</a>
+        </div>
+      </div>
+
+      <div class="work-item">
+        <div class="work-no">e.</div>
+        <div>
+          <h3>MCP servers &amp; a working CRM</h3>
+          <div class="work-role">Model Context Protocol · npm · Next.js + Neon</div>
+          <p class="desc">
+            Published MCP servers — <strong>SelfHeal</strong> (self-healing proxy for unreliable
+            APIs: retries, circuit breakers, observability), <strong>SiteHealth</strong> (full
+            website audit, zero API keys), <strong>LeadEnrich</strong> (waterfall enrichment) —
+            plus a production CRM that runs a real painting business: quotes, invoices, lead
+            pipeline, mined from municipal permit data.
+          </p>
+          <div class="tags"><span class="tag">MCP</span><span class="tag">npm packages</span><span class="tag">Permit-data mining</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="wrap plain">
+      <div class="sec-head"><span class="no">02</span><h2>The method, stated plainly</h2></div>
+      <blockquote>The agent writes the code. I own everything else.</blockquote>
+      <p>
+        "Everything else" is the actual job: <strong>decomposing the problem, deciding the
+        architecture, catching the agent when it loses the plot, verifying end-to-end, and
+        operating what ships.</strong> I run multi-agent and headless pipelines with budget
+        caps, keep a shared working-memory protocol so parallel agent sessions don't collide,
+        and monitor production because I've seen what happens when nobody does.
+      </p>
+      <p>
+        The marketing background isn't a caveat — it's the other half of the leverage. I build
+        the funnel and the feature as one system: the data study that feeds the blog that feeds
+        the scanner that feeds the upgrade path. <strong>Software that markets itself, built by
+        someone who's done both jobs.</strong>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="no">03</span><h2>What my systems run on</h2></div>
+      <div class="stack-grid">
+        <div>
+          <h4>Build</h4>
+          <ul><li>Claude Code (daily driver)</li><li>TypeScript / Node</li><li>Next.js (App Router)</li><li>Postgres (Neon, Supabase)</li></ul>
+        </div>
+        <div>
+          <h4>AI in production</h4>
+          <ul><li>Claude API · structured outputs</li><li>MCP (servers &amp; clients)</li><li>Agent orchestration</li><li>Prompt-injection hardening</li></ul>
+        </div>
+        <div>
+          <h4>Ship &amp; operate</h4>
+          <ul><li>Vercel · Railway · VPS</li><li>Stripe billing</li><li>Web push · cron · queues</li><li>PostHog · Umami analytics</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span style="font-size:0.85rem;color:var(--muted)">© 2026 Carson Roell — Toronto, Canada</span>
+    <div class="links">
+      <a href="mailto:carson.roell@gmail.com">Email</a>
+      <a href="https://www.linkedin.com/in/carson-roell/">LinkedIn</a>
+      <a href="/Carson_Roell_Resume.pdf">Resume</a>
+      <a href="/">Marketing side</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
