@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carson Roell — Resume</title>
+  <meta name="description" content="Resume — Carson Roell, AI-native builder and marketing operator. Toronto, Eastern Time.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231a1915'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' fill='%23FBFAF7' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --paper:#fbfaf7; --ink:#1a1915; --muted:#6d6b62; --rule:#e6e3da; --accent:#234e3f; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--paper); color:var(--ink);
+           font-size:13.5px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+    .page { max-width:820px; margin:0 auto; padding:52px 40px 64px; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    h1 { font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:2.1rem; letter-spacing:-.01em; }
+    .tagline { font-size:.78rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-top:4px; }
+    .contact { margin-top:10px; font-size:.82rem; color:var(--muted); }
+    .contact a { color:var(--muted); }
+    h2 { font-family:'Newsreader',Georgia,serif; font-weight:500; font-size:1.05rem; letter-spacing:.01em;
+         border-bottom:1px solid var(--rule); padding-bottom:5px; margin:26px 0 12px; }
+    .summary { margin-top:18px; color:var(--muted); max-width:70ch; }
+    .summary strong { color:var(--ink); }
+    .entry { margin-bottom:13px; }
+    .entry .head { display:flex; justify-content:space-between; gap:14px; align-items:baseline; }
+    .entry .head b { font-size:.92rem; font-weight:600; }
+    .entry .head span { font-size:.78rem; color:var(--muted); white-space:nowrap; }
+    .entry .sub { font-size:.8rem; color:var(--accent); margin:1px 0 4px; }
+    .entry p, .entry li { color:var(--muted); font-size:.85rem; }
+    .entry ul { margin:4px 0 0 16px; }
+    .entry li { margin-bottom:2px; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:6px 28px; }
+    .skill h4 { font-size:.72rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; margin-bottom:3px; }
+    .skill p { font-size:.83rem; color:var(--muted); }
+    .print-note { position:fixed; top:14px; right:16px; font-size:.72rem; color:var(--muted);
+                  border:1px solid var(--rule); border-radius:999px; padding:5px 12px; background:var(--paper); }
+    @media print {
+      .print-note { display:none; }
+      body { font-size:12px; }
+      .page { padding:10px 8px; max-width:none; }
+      a { color:var(--ink); }
+      h2 { break-after:avoid; }
+      .entry { break-inside:avoid; }
+    }
+    @media (max-width:640px){ .two-col { grid-template-columns:1fr; } .entry .head { flex-direction:column; gap:0; } }
+  </style>
+</head>
+<body>
+<button class="print-note" onclick="window.print()">Print / save as PDF</button>
+<div class="page">
+  <header>
+    <h1>Carson Roell</h1>
+    <p class="tagline">AI-Native Builder · Marketing Operator</p>
+    <p class="contact">
+      Toronto, ON (Eastern Time) · <a href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a> ·
+      289-380-3049 · <a href="https://carsonr.ai/builder">carsonr.ai/builder</a> ·
+      <a href="https://www.linkedin.com/in/carson-roell/">LinkedIn</a>
+    </p>
+    <p class="summary">
+      Marketing-trained operator (BComm, Guelph) who ships <strong>production software with AI
+      coding agents</strong> — Claude Code daily; Claude API, MCP, and agent orchestration in
+      everything. Solo-built and operate <strong>10+ live systems</strong>: SaaS products, a
+      working CRM, autonomous monitoring, and published MCP servers. I direct the agents that
+      write the code and own everything else: architecture, verification, deploys, billing, and
+      the funnel that sells it. <strong>Available 15–25 hrs/wk contract or part-time.</strong>
+    </p>
+  </header>
+
+  <h2>Selected live systems — built solo, in production, operated daily</h2>
+  <div class="entry">
+    <div class="head"><b>JARVIS — proactive life-OS PWA</b><span>2026</span></div>
+    <ul>
+      <li>Natural-language capture → AI briefings → push nudges on cron; Neon Postgres cross-device sync; Google Calendar auto time-blocking. Next.js + Claude API.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="head"><b>Foreman — autonomous product-health system</b><span>2026</span></div>
+    <ul>
+      <li>3-hour heartbeat health-checks a portfolio of live apps (deploy rot, DB pauses, funnel metrics) → one-tap action cards pushed to phone; headless Claude pipeline runner with budget caps.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="head"><b>LinkRescue — affiliate-link integrity SaaS</b><span>2026 · <a href="https://www.linkrescue.io">linkrescue.io</a></span></div>
+    <ul>
+      <li>Custom crawler: time-budgeted scans, parallel checking with a concurrency-safe domain limiter, tiered bot-retry strategy; monthly data study (~6,500 links / 50 sites) feeds a published index — product and marketing engine as one system.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="head"><b>AI Commerce Radar — AI audit funnel</b><span>2026 · <a href="https://ai-commerce-radar.vercel.app">live</a></span></div>
+    <ul>
+      <li>Claude structured outputs grade listings on six dimensions and simulate buyer queries → shareable scored reports with dynamic OG cards, email capture, Stripe checkout.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="head"><b>MCP servers &amp; developer tooling</b><span>2026 · npm</span></div>
+    <ul>
+      <li>Published SelfHeal (self-healing API proxy: retries, circuit breakers, observability), SiteHealth (zero-key website audit), LeadEnrich (waterfall enrichment).</li>
+    </ul>
+  </div>
+
+  <h2>Experience</h2>
+  <div class="entry">
+    <div class="head"><b>Founder — Freedom Engineers (software studio)</b><span>2025 – Present · Toronto</span></div>
+    <p class="sub">One-person studio: every system above, plus a production CRM running a real business</p>
+    <ul>
+      <li>Full lifecycle solo with agent leverage: research → build → deploy → operate → market. Stripe billing, security hardening (RLS, SSRF guards, rate limiting), analytics, monitoring.</li>
+      <li>Built the Cut n&rsquo; Roell CRM (Next.js + Neon): quotes, invoicing, lead pipeline mined from municipal permit APIs (Toronto, Vaughan, Barrie, Muskoka).</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="head"><b>Owner &amp; Operator — Cut n&rsquo; Roell Painting</b><span>2023 – Present · Muskoka/GTA, ON</span></div>
+    <ul>
+      <li>Built a painting business from zero: referral pipeline, quoting, scheduling, delivery; repeat-business rate high enough to run on referrals. Now managed through the CRM I built for it.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="head"><b>Sales Associate — SalesOptAI</b><span>2025 · Aurora, ON</span></div>
+    <ul>
+      <li>Inbound/outbound lead engagement and product demos for AI-powered voice reception tools; CRM-driven outreach workflows.</li>
+    </ul>
+  </div>
+
+  <h2>Skills</h2>
+  <div class="two-col">
+    <div class="skill"><h4>Build</h4><p>TypeScript/Node · Next.js (App Router) · React · Postgres (Neon, Supabase) · Python</p></div>
+    <div class="skill"><h4>AI in production</h4><p>Claude Code (daily driver) · Claude API · structured outputs · MCP servers &amp; clients · agent orchestration · prompt-injection hardening</p></div>
+    <div class="skill"><h4>Ship &amp; operate</h4><p>Vercel · Railway · VPS/systemd · Stripe · web push · cron/queues · PostHog · Umami</p></div>
+    <div class="skill"><h4>Marketing</h4><p>SEO &amp; content engines · funnel design · GA4 · HubSpot · outbound sequences · data-study PR</p></div>
+  </div>
+
+  <h2>Education &amp; certifications</h2>
+  <div class="entry">
+    <div class="head"><b>BComm, Marketing Management — University of Guelph</b><span>2018</span></div>
+  </div>
+  <div class="entry">
+    <p>Google Digital Marketing &amp; E-Commerce (2024) · HubSpot Inbound Sales &amp; Inbound Marketing (2025) · GA4 certification in progress</p>
+  </div>
+</div>
+</body>
+</html>
