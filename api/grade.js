@@ -113,8 +113,11 @@ module.exports = async function handler(req, res) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-opus-4-8",
-        max_tokens: 4000,
+        model: "claude-opus-5",
+        // Opus 5 caps thinking + output together, so this is not a 4000-token
+        // answer budget the way it was on 4.8 — truncation here surfaces as
+        // unparseable JSON, so leave headroom.
+        max_tokens: 8000,
         thinking: { type: "adaptive" },
         output_config: {
           effort: "low",
@@ -145,6 +148,11 @@ module.exports = async function handler(req, res) {
 
     if (response.stop_reason === "refusal") {
       return res.status(422).json({ error: "Couldn't grade that one. Try a different email." });
+    }
+
+    if (response.stop_reason === "max_tokens") {
+      console.error("grade truncated:", JSON.stringify(response.usage || {}));
+      return res.status(502).json({ error: "That email was too long to grade. Try a shorter one." });
     }
 
     const textBlock = (response.content || []).find((b) => b.type === "text");
