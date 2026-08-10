@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carson Roell — Case study: the scanner that recommended the wrong job</title>
+  <meta name="description" content="A false positive in an automated job scanner, the obvious theory that turned out to be wrong, and the three rules a corpus of 800 real postings forced. With the code, the validation, and the regression suite.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carsonr.ai/case-study">
+  <meta property="og:title" content="The scanner recommended a product-manager job to an engineer">
+  <meta property="og:description" content="One false positive, one wrong theory caught before it shipped, three rules a corpus of 800 real postings forced, and a regression suite that runs in 178ms.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231a1915'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' fill='%23FBFAF7' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #fbfaf7;
+      --ink: #1a1915;
+      --muted: #6d6b62;
+      --rule: #e6e3da;
+      --accent: #234e3f;
+      --accent-soft: #eef2ef;
+      --code-bg: #f4f2ec;
+      --flag: #8a3324;
+      --flag-soft: #f7efec;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      font-size: 16.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .serif { font-family: 'Newsreader', Georgia, serif; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 28px; }
+    .narrow { max-width: 680px; }
+    a { color: var(--ink); }
+
+    .microlabel {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+    }
+
+    /* ---------- header ---------- */
+    header { border-bottom: 1px solid var(--rule); }
+    .nav { display: flex; align-items: baseline; justify-content: space-between; padding: 26px 0; gap: 18px; flex-wrap: wrap; }
+    .wordmark {
+      font-family: 'Newsreader', Georgia, serif; font-size: 1.35rem; font-weight: 500;
+      text-decoration: none; letter-spacing: -0.01em;
+    }
+    .nav nav { display: flex; gap: 24px; flex-wrap: wrap; }
+    .nav nav a {
+      font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; color: var(--muted); transition: color 0.15s ease;
+    }
+    .nav nav a:hover, .nav nav a:focus-visible { color: var(--ink); }
+
+    /* ---------- hero ---------- */
+    .hero { padding: 84px 0 72px; border-bottom: 1px solid var(--rule); }
+    .hero h1 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: clamp(2.1rem, 5.2vw, 3.4rem); line-height: 1.1; letter-spacing: -0.02em;
+      margin: 18px 0 0; max-width: 20ch;
+    }
+    .hero .deck {
+      margin-top: 26px; font-size: 1.12rem; color: var(--muted); max-width: 62ch;
+    }
+    .hero .deck strong { color: var(--ink); font-weight: 500; }
+
+    .facts {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      margin-top: 44px; border-top: 1px solid var(--rule);
+    }
+    .fact { padding: 20px 20px 20px 0; border-right: 1px solid var(--rule); }
+    .fact:last-child { border-right: 0; }
+    .fact b {
+      display: block; font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.01em;
+    }
+    .fact span { font-size: 0.78rem; color: var(--muted); display: block; margin-top: 4px; }
+
+    /* ---------- sections ---------- */
+    section { padding: 68px 0; border-bottom: 1px solid var(--rule); }
+    section h2 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: clamp(1.6rem, 3.4vw, 2.1rem); line-height: 1.2; letter-spacing: -0.015em;
+      margin: 14px 0 20px; max-width: 24ch;
+    }
+    section h3 {
+      font-size: 1rem; font-weight: 600; margin: 34px 0 8px; letter-spacing: -0.005em;
+    }
+    section p { color: var(--muted); max-width: 68ch; margin-bottom: 16px; }
+    section p strong { color: var(--ink); font-weight: 500; }
+    section p a, .note a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    section p a:hover, .note a:hover { border-bottom-color: var(--accent); }
+
+    ul.body { margin: 0 0 18px 0; list-style: none; max-width: 68ch; }
+    ul.body li {
+      color: var(--muted); padding-left: 22px; position: relative; margin-bottom: 10px;
+    }
+    ul.body li::before {
+      content: ""; position: absolute; left: 4px; top: 0.68em;
+      width: 5px; height: 5px; border-radius: 50%; background: var(--rule);
+    }
+    ul.body li strong { color: var(--ink); font-weight: 500; }
+
+    /* ---------- code ---------- */
+    pre {
+      background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px;
+      padding: 18px 20px; overflow-x: auto; margin: 18px 0 22px;
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem; line-height: 1.7; color: var(--ink);
+    }
+    pre .c { color: var(--muted); }
+    code {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.86em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px;
+    }
+    .caption { font-size: 0.8rem; color: var(--muted); margin: -12px 0 24px; }
+
+    /* ---------- callouts ---------- */
+    .note {
+      border-left: 2px solid var(--accent); background: var(--accent-soft);
+      padding: 18px 22px; margin: 24px 0; max-width: 68ch; border-radius: 0 4px 4px 0;
+    }
+    .note p { margin: 0; color: var(--ink); font-size: 0.95rem; }
+    .note .microlabel { display: block; margin-bottom: 6px; }
+
+    .flag {
+      border-left: 2px solid var(--flag); background: var(--flag-soft);
+      padding: 18px 22px; margin: 24px 0; max-width: 68ch; border-radius: 0 4px 4px 0;
+    }
+    .flag p { margin: 0; color: var(--ink); font-size: 0.95rem; }
+    .flag .microlabel { display: block; margin-bottom: 6px; color: var(--flag); }
+
+    /* ---------- rules ---------- */
+    .rule-item { border-top: 1px solid var(--rule); padding: 26px 0; }
+    .rule-item:last-of-type { border-bottom: 1px solid var(--rule); }
+    .rule-item .n {
+      font-family: 'Newsreader', Georgia, serif; font-size: 0.95rem; color: var(--accent);
+    }
+    .rule-item h3 { margin: 4px 0 8px; font-size: 1.12rem; font-weight: 500; letter-spacing: -0.01em; }
+    .rule-item p { margin-bottom: 0; font-size: 0.95rem; }
+
+    /* ---------- results table ---------- */
+    .table-scroll { overflow-x: auto; margin: 22px 0 6px; }
+    table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--rule); }
+    th {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); border-bottom-color: var(--ink);
+    }
+    td { color: var(--muted); }
+    td:first-child { color: var(--ink); }
+    td.num { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.84rem; white-space: nowrap; }
+    .kept { color: var(--accent); font-weight: 500; }
+    .dropped { color: var(--flag); font-weight: 500; }
+
+    /* ---------- closing ---------- */
+    .closing { padding: 78px 0 40px; border-bottom: 0; }
+    .closing h2 { max-width: 26ch; }
+    .cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
+    .btn {
+      display: inline-block; padding: 13px 24px; border-radius: 4px; text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; transition: opacity 0.15s ease;
+    }
+    .btn-primary { background: var(--ink); color: var(--paper); }
+    .btn-secondary { border: 1px solid var(--rule); color: var(--ink); }
+    .btn:hover { opacity: 0.82; }
+
+    footer { padding: 34px 0 60px; font-size: 0.82rem; color: var(--muted); }
+    footer a { color: var(--muted); }
+
+    a:focus-visible, .btn:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px;
+    }
+
+    @media (max-width: 720px) {
+      .facts { grid-template-columns: repeat(2, 1fr); }
+      .fact { border-right: 0; padding-right: 0; }
+      .fact:nth-child(odd) { border-right: 1px solid var(--rule); padding-right: 18px; }
+      .hero { padding: 56px 0 48px; }
+      section { padding: 52px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="wordmark" href="/">Carson Roell</a>
+    <nav>
+      <a href="/builder">Builder</a>
+      <a href="/resume">Resume</a>
+      <a href="/grader">Live demo</a>
+      <a href="/">Marketing</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="microlabel">Case study · Debugging judgment</span>
+    <h1 class="serif">The scanner recommended a product-manager job to an engineer</h1>
+    <p class="deck">
+      I run an automated job scanner that reads ~700 postings a day and pushes the best ones to my
+      phone. On August 9 it pushed a <strong>Lead Product Manager</strong> role, scored 89 out of a
+      45-point bar. This is what the fix actually took: one wrong theory caught before it shipped,
+      three rules that a corpus of <strong>800 real postings</strong> forced on me, and a regression
+      suite that runs in 178&nbsp;ms.
+    </p>
+
+    <div class="facts">
+      <div class="fact"><b>800</b><span>real postings re-scored to validate the fix</span></div>
+      <div class="fact"><b>21</b><span>flagged, hand-checked, zero false positives</span></div>
+      <div class="fact"><b>10</b><span>regression tests, real titles, zero dependencies</span></div>
+      <div class="fact"><b>0</b><span>npm packages in the whole scanner</span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">The system</span>
+    <h2 class="serif">What it is, in one paragraph</h2>
+    <p>
+      <strong>Job Radar</strong> is a zero-dependency, zero-LLM Node script. Every morning at 7:15 it
+      pulls three sources — Hacker News <em>"Who is hiring?"</em> through the Algolia API, RemoteOK,
+      and two We Work Remotely RSS feeds — scores roughly 700 postings against my profile in about
+      15 seconds, and writes a ranked report. Anything over 45 surfaces; the top 3 unseen hits over
+      60 are merged straight into my target list and synced to a card on my phone.
+    </p>
+    <p>
+      Scoring is weighted regex, not a model: Claude Code +30, MCP +25, agentic +20, and so on, minus
+      penalties for US-only, onsite, internship, or stale. <strong>No LLM anywhere in the pipeline</strong>
+      — it costs nothing to run, it can't hallucinate a company that doesn't exist, and every score
+      decomposes into the exact signals that produced it. That last property is the only reason the
+      bug below was diagnosable at all.
+    </p>
+    <div class="note">
+      <span class="microlabel">Why this matters for the bug</span>
+      <p>
+        The scorer is a bag of keywords over the whole posting body. Which means a role that is
+        <em>about</em> AI scores exactly like a role that <em>builds</em> it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">The bug</span>
+    <h2 class="serif">A posting I am not qualified for, scored 89</h2>
+    <p>
+      HN comment <code>48358657</code> — <em>"Scribd | Lead Product Manager, AI Developer Platform |
+      US, Canada | REMOTE"</em>. It tripped Claude Code, agentic, MCP, Claude, and TypeScript on the
+      strength of the product description alone, scored <strong>89</strong>, cleared the auto-merge
+      bar of 60, and landed on my phone as a target with a pitch pre-written for it.
+    </p>
+    <p>
+      It is a real posting for a real job. It is simply a job for a product manager, and I am an
+      engineer. The scanner had no concept of <em>which seat</em> a posting was for — only of which
+      words it contained.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">The part that actually matters</span>
+    <h2 class="serif">Three days earlier, the obvious theory was wrong</h2>
+    <p>
+      This was the second false positive of its kind, and the first one is the more useful story.
+      On August 6, Radar merged a target named
+      <em>"Location: Dallas, TX Remote: Yes Willing to relocate: Yes"</em> — comment
+      <code>49185076</code>. It had written me a pitch addressed to a fellow job applicant.
+    </p>
+    <p>
+      The obvious explanation was right there: HN runs a <em>"Who wants to be hired?"</em> thread
+      alongside <em>"Who is hiring?"</em>, and my Algolia query was clearly picking up both. An
+      easy fix — tighten the query, ship it, move on.
+    </p>
+    <div class="flag">
+      <span class="microlabel">I checked it first. It was wrong.</span>
+      <p>
+        The query returns <strong>only</strong> "Who is hiring?" stories — verified live against the
+        API. And <code>49185076</code>'s parent is <code>49156683</code>: the genuine August hiring
+        thread. A real job seeker had simply posted their résumé where the employers were.
+      </p>
+    </div>
+    <p>
+      Had I shipped the obvious fix, I'd have tightened a query that was already correct, watched the
+      bug survive, and lost trust in the dedupe layer for no reason. The five minutes spent
+      falsifying the theory were the only five minutes that mattered.
+    </p>
+    <p>
+      Because the source was legitimate, the fix had to detect the <strong>shape</strong> of a
+      résumé instead: HN's candidate template is a fixed set of labelled fields, and three or more
+      of them together is something no employer post produces.
+    </p>
+<pre><span class="c">// candidate-filter.mjs — detected by SHAPE, not keyword.</span>
+const CANDIDATE_FIELDS = [
+  /(^|[\s|·&gt;])location\s*:/i,
+  /(^|[\s|·&gt;])remote\s*:/i,
+  /willing to relocate\s*:/i,
+  /(^|[\s|·&gt;])technologies\s*:/i,
+  /r(é|e)sum(é|e)\s*(\/\s*cv)?\s*:/i,
+  <span class="c">/* …cv, email, seeking */</span>
+];
+
+export const CANDIDATE_MIN_FIELDS = 3;</pre>
+    <p class="caption">
+      The threshold is 3 and not 1, because 180 genuine postings in that single thread use
+      "Location:" or "Remote:" as ordinary fields. Requiring one or two would have rejected the
+      thread.
+    </p>
+    <p>
+      Validated against all 183 comments of the August thread: <strong>3 flagged, all genuine job
+      seekers; 180 kept; zero false positives.</strong> Rejection happens at fetch time, so a
+      candidate post never enters the dedupe cache and can't be silently skipped later.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">The fix</span>
+    <h2 class="serif">Three rules, each one forced by the corpus</h2>
+    <p>
+      Back to the product manager. The fix is a &minus;60 penalty on postings whose title names a
+      role I can't fill. Every part of that sentence was rewritten at least once by contact with
+      real data.
+    </p>
+
+    <div class="rule-item">
+      <span class="n serif">Rule 1</span>
+      <h3>Match the title, never the body.</h3>
+      <p>
+        My first attempt scanned the whole posting and rejected most of the thread. Genuine
+        engineering postings are full of sentences like <em>"partner closely with product
+        managers."</em> The role a posting <em>is</em> for lives in its header; the roles it merely
+        mentions live in its prose.
+      </p>
+    </div>
+
+    <div class="rule-item">
+      <span class="n serif">Rule 2</span>
+      <h3>Match role nouns, not topic words.</h3>
+      <p>
+        Every near miss was an engineering title containing a non-engineering word: Sales Engineer,
+        Solutions Engineer, Support Engineer, Design Engineer, Data Engineer. So the pattern matches
+        <code>sales manager</code> and <code>account executive</code> — never a bare
+        <code>sales</code>.
+      </p>
+    </div>
+
+    <div class="rule-item">
+      <span class="n serif">Rule 3</span>
+      <h3>An engineering seat in the title vetoes the penalty.</h3>
+      <p>
+        HN posts advertise whole req lists at once. <code>49207409</code> is
+        <em>"2 Full Stack AI Engineer, 1 GTM"</em>; Sourcegraph's is <em>"SWE, Tech Lead, Agent
+        Engineer, Product Manager, Product Marketing."</em> Both name a seat for me. Without the
+        veto, the first of those — a live target already on my board — dropped from 84 to 24.
+      </p>
+    </div>
+
+    <h3>The subtlety that cost the most time</h3>
+    <p>
+      HN postings arrive as one flat string, so Radar's "title" is just the first 110 characters —
+      header plus whatever prose fits. That bleed alone was enough to misread a posting: Ashby's ad
+      for engineering leaders reads <em>"… $200k–$275k Ashby is the all-in-one recruiting
+      platform"</em>, and the trailing sentence made it a recruiting job.
+    </p>
+<pre><span class="c">// Cut at the first sentence end, then drop the trailing pipe-delimited
+// field — which is where the prose starts once a header has 3+ fields.</span>
+export function titlePart(title) {
+  const head = String(title || "")
+    .split(/(?&lt;=[.!?])\s|\s[-–—]\s(?=[A-Z])/)[0]
+    .slice(0, 200);
+  const fields = head.split("|");
+  return (fields.length &gt;= 3 ? fields.slice(0, -1).join(" | ") : head).slice(0, 140);
+}</pre>
+    <p>
+      And one guard I'd never have predicted — <code>PM</code> is a useful role token and also a
+      clock time. A lookbehind keeps <em>"apply by 5&nbsp;pm ET"</em> from reading as a product
+      manager:
+    </p>
+<pre>/(?&lt;!\d)(?&lt;!\d )\bpms?\b(?!\s*[-–—]?\s*(?:e[sd]t|p[sd]t|c[sd]t|m[sd]t|utc|gmt))/i</pre>
+    <p>
+      The whole thing lives in its own module rather than inside the scraper, because the scraper
+      does network I/O at import time and I wanted these rules testable without touching the
+      network.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">Validation</span>
+    <h2 class="serif">I don't trust a filter I haven't tried to break</h2>
+    <p>
+      A rule that rejects the wrong posting is easy. A rule that rejects the wrong posting
+      <em>and nothing else</em> has to be measured. So I re-scored <strong>800 real postings</strong>
+      from the June, July and August HN threads.
+    </p>
+    <div class="note">
+      <span class="microlabel">The harness tests itself first</span>
+      <p>
+        Before measuring anything, the harness reproduces production's own recorded scores — 89, 113,
+        84 — to prove the scoring table it copied hasn't drifted from the live one. A validation run
+        against a stale table would have looked exactly like a passing one.
+      </p>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Posting</th><th>Before</th><th>After</th><th>Outcome</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Scribd — Lead PM, AI Developer Platform</td>
+            <td class="num">89</td><td class="num">29</td>
+            <td class="dropped">Dropped ✓</td>
+          </tr>
+          <tr>
+            <td>Portless — AI Engineer, NA remote</td>
+            <td class="num">113</td><td class="num">113</td>
+            <td class="kept">Unchanged ✓</td>
+          </tr>
+          <tr>
+            <td>Interview Resources — Full Stack AI Eng</td>
+            <td class="num">84</td><td class="num">84</td>
+            <td class="kept">Unchanged ✓</td>
+          </tr>
+          <tr>
+            <td>Surfacing band (≥ 45)</td>
+            <td class="num">37</td><td class="num">34</td>
+            <td>3 removed, all correct</td>
+          </tr>
+          <tr>
+            <td>Auto-merge band (≥ 60)</td>
+            <td class="num">21</td><td class="num">20</td>
+            <td>1 removed — the Scribd posting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:22px">
+      Across all 800: <strong>21 flagged, every one hand-checked, zero false positives.</strong> Then
+      I ran it against 255 RemoteOK and We Work Remotely titles — a completely different title shape,
+      since those sources supply real structured titles instead of body text. 37 flagged, all
+      genuine.
+    </p>
+
+    <h3>The regression suite</h3>
+    <p>
+      Ten cases, all built from real postings rather than invented strings, no dependencies, run with
+      the Node built-in test runner:
+    </p>
+<pre>$ npm run test:job-radar
+
+✔ the Scribd Lead PM that started this is rejected
+✔ the two genuine engineering targets survive
+✔ rejects non-engineering roles
+✔ keeps engineering titles that contain a non-engineering word
+✔ keeps multi-role postings that include an engineering seat
+✔ engineering management is rejected, engineering is not
+✔ developer-as-audience does not count as an engineering seat
+✔ title is cut back to the header, so body prose cannot decide the verdict
+✔ a clock time in a title is not a PM role
+✔ empty and malformed input is safe
+
+ℹ tests 10   ℹ pass 10   ℹ fail 0   ℹ duration_ms 178.26</pre>
+    <p class="caption">Live output, not a mock-up. Every bug on this page has a test named after it.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">Known limitations</span>
+    <h2 class="serif">What I deliberately left open</h2>
+    <p>
+      Both of these are written into the source as comments, because a limitation nobody can find is
+      just a bug with better manners.
+    </p>
+    <ul class="body">
+      <li>
+        <strong>Engineering Manager is classified as non-engineering.</strong> That's a judgment
+        call, not a fact: it's a people-leadership track record I don't have. It's one token in one
+        pattern, so if I decide to pursue EM roles, deleting <code>engineering</code> from the
+        manager regex reverses it.
+      </li>
+      <li>
+        <strong>A fixed &minus;60 can in principle be outscored.</strong> A non-engineering posting
+        would need a base score around 105 to still auto-merge. Nothing in the 800-posting corpus
+        comes close — the highest flagged base was 89 — so a fixed penalty is honest for now, and a
+        hard veto would be the fix if that ever stops being true.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <span class="microlabel">Why this one</span>
+    <h2 class="serif">What I'd want you to take from it</h2>
+    <p>
+      I could have shown you a bigger system. I picked this one because a screenshot of a working app
+      proves almost nothing now — anyone can generate one in an afternoon. What's harder to fake is
+      the part in between: <strong>falsifying the obvious theory before building on it, letting real
+      data overrule the design three times, measuring the fix against a corpus instead of a hunch,
+      and writing down what's still wrong with it.</strong>
+    </p>
+    <p>
+      I build with AI coding agents daily — Claude Code is my primary tool, and this scanner was
+      written with it. The agent wrote most of these regexes. It did not decide to go check whether
+      the Algolia query was really the culprit, it did not decide that 3 was the right field
+      threshold, and it did not decide that Engineering Manager was out of scope. That judgment is
+      the job, and it's what I'd bring to yours.
+    </p>
+  </div>
+</section>
+
+<div class="closing wrap">
+  <span class="microlabel">Next</span>
+  <h2 class="serif">The rest of the work, and how to reach me</h2>
+  <p>
+    Ten-plus live systems, built and operated solo: a life-OS PWA, an autonomous product-health
+    monitor, a SaaS crawler, published MCP servers, and a CRM running a real business.
+  </p>
+  <div class="cta">
+    <a class="btn btn-primary" href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a>
+    <a class="btn btn-secondary" href="/builder">See the live systems</a>
+    <a class="btn btn-secondary" href="/resume">Resume</a>
+    <a class="btn btn-secondary" href="/grader">Try a live tool</a>
+  </div>
+</div>
+
+<footer class="wrap">
+  © 2026 Carson Roell — Toronto, Canada (Eastern Time) ·
+  <a href="https://www.linkedin.com/in/carson-roell/">LinkedIn</a>
+</footer>
+
+</body>
+</html>
