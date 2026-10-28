@@ -85,6 +85,29 @@
     .hero-meta { margin-top: 44px; font-size: 0.85rem; color: var(--muted); }
     .hero-meta a { color: var(--muted); }
     .hero-meta a:hover { color: var(--ink); }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; }
+    .hero-visual img, .work-visual img {
+      width: 100%; height: auto; display: block; border-radius: 8px;
+    }
+    .hero-visual img { aspect-ratio: 4 / 3; object-fit: cover; }
+    .work-visual { margin: 0 0 20px; }
+    .work-visual img { aspect-ratio: 16 / 9; object-fit: cover; }
+
+    /* Proof strip */
+    .proof { padding: 56px 0; border-bottom: 1px solid var(--rule); }
+    .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 28px; }
+    .proof-card {
+      border: 1px solid var(--rule); border-radius: 8px; padding: 24px;
+      background: #fff; text-decoration: none; color: var(--ink);
+      transition: border-color 0.15s ease;
+    }
+    .proof-card:hover { border-color: var(--accent); }
+    .proof-card h3 {
+      font-family: 'Newsreader', Georgia, serif; font-weight: 500;
+      font-size: 1.25rem; letter-spacing: -0.01em; margin: 10px 0 8px;
+    }
+    .proof-card p { font-size: 0.92rem; color: var(--muted); margin-bottom: 14px; }
+    .proof-card .proof-link { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
 
     /* Section scaffolding */
     section { padding: 84px 0; border-bottom: 1px solid var(--rule); }
@@ -156,6 +179,8 @@
 
     @media (max-width: 720px) {
       .hero { padding: 64px 0 60px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+      .proof-grid { grid-template-columns: 1fr; }
       section { padding: 60px 0; }
       .work-item { grid-template-columns: 1fr; gap: 10px; padding: 32px 0; }
       .work-no { font-size: 1.5rem; }
@@ -183,25 +208,62 @@
   <main id="top">
 
     <div class="hero">
-      <div class="wrap">
-        <span class="microlabel">Marketing Operator — Toronto, ON</span>
-        <h1>I build the marketing engine, then I run it.</h1>
-        <p class="intro">
-          Marketing grad (<strong>BComm, University of Guelph</strong>) turned operator.
-          I run <strong>Freedom Engineers</strong>, a one-person software studio — so the
-          funnels, SEO engines, and outbound systems below aren't projects I watched from
-          the sidelines. I designed them, shipped them, and worked their numbers myself.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-solid" href="#work">Selected work</a>
-          <a class="btn btn-line" href="/resume">Resume</a>
+      <div class="wrap hero-grid">
+        <div>
+          <span class="microlabel">Marketing Operator — Toronto, ON</span>
+          <h1>I build the marketing engine, then I run it.</h1>
+          <p class="intro">
+            Marketing grad (<strong>BComm, University of Guelph</strong>) turned operator.
+            I run <strong>Freedom Engineers</strong>, a one-person software studio — so the
+            funnels, SEO engines, and outbound systems below aren't projects I watched from
+            the sidelines. I designed them, shipped them, and worked their numbers myself.
+          </p>
+          <p class="intro">
+            Currently building <strong>FollowUp Machine</strong> — fixed-price follow-up
+            automation for local businesses — alongside a painting business run on a
+            custom CRM I built.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-solid" href="https://calendly.com/carson-roell/one-on-one">Book a call</a>
+            <a class="btn btn-line" href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a>
+            <a class="btn btn-line" href="#work">Selected work</a>
+          </div>
+          <p class="hero-meta">
+            Remote-ready · Toronto, ON ·
+            <a href="https://www.linkedin.com/in/carson-roell-914433254" rel="me">LinkedIn</a>
+          </p>
         </div>
-        <p class="hero-meta">
-          Remote-ready · <a href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a> ·
-          <a href="https://www.linkedin.com/in/carson-roell-914433254" rel="me">LinkedIn</a>
-        </p>
+        <div class="hero-visual">
+          <img src="assets/media-generation-hero-operator-0-dc7232f8-0b32-424b-8b7e-6dd29382fafe.webp" alt="Abstract illustration of converging paths over the Toronto skyline" loading="eager" width="1200" height="900">
+        </div>
       </div>
     </div>
+
+    <section class="proof" aria-label="Current and live work">
+      <div class="wrap">
+        <span class="microlabel">Live now</span>
+        <div class="proof-grid">
+          <a class="proof-card" href="https://followup-machine-two.vercel.app/" rel="noopener">
+            <span class="microlabel">Current work</span>
+            <h3>FollowUp Machine</h3>
+            <p>Fixed-price follow-up automation on n8n: instant lead response plus a 30-day sequence, synced to your CRM. Packages from $750 CAD.</p>
+            <span class="proof-link">followup-machine-two.vercel.app →</span>
+          </a>
+          <a class="proof-card" href="https://cutnroell.vercel.app" rel="noopener">
+            <span class="microlabel">Owner-operator, 2023–2025</span>
+            <h3>Cut n' Roell Painting</h3>
+            <p>A painting business in Muskoka and York Region, built from zero and run on a custom CRM I built.</p>
+            <span class="proof-link">cutnroell.vercel.app →</span>
+          </a>
+          <a class="proof-card" href="https://www.linkrescue.io" rel="noopener">
+            <span class="microlabel">SEO &amp; content engine</span>
+            <h3>LinkRescue</h3>
+            <p>Monthly Link Rot Index built from original data: 50 sites, roughly 6,500 links scanned per issue.</p>
+            <span class="proof-link">linkrescue.io →</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
     <section id="work">
       <div class="wrap">
@@ -212,6 +274,29 @@
 
         <article class="work-item">
           <div class="work-no">i.</div>
+          <div>
+            <div class="work-visual">
+              <img src="assets/media-generation-work-followup-0-aacfcbfb-f6f4-47e5-b4ab-07ecbfa46847.webp" alt="Abstract illustration of connected follow-up messages" loading="lazy" width="1200" height="675">
+            </div>
+            <h3>FollowUp Machine</h3>
+            <p class="work-role">Current work · Marketing automation</p>
+            <p class="desc">
+              Fixed-price follow-up automation for local businesses, built on n8n:
+              <strong>instant lead response, a 30-day follow-up sequence, and CRM sync</strong> —
+              with fixed prices agreed up front and 50% to start, 50% on delivery.
+            </p>
+            <div class="tags">
+              <span class="tag">Lead follow-up</span>
+              <span class="tag">n8n automation</span>
+              <span class="tag">Fixed-price install</span>
+            </div>
+            <br>
+            <a class="work-link" href="https://followup-machine-two.vercel.app/" rel="noopener">followup-machine-two.vercel.app</a>
+          </div>
+        </article>
+
+        <article class="work-item">
+          <div class="work-no">ii.</div>
           <div>
             <h3>AI Commerce Radar</h3>
             <p class="work-role">Funnel design &amp; product launch</p>
@@ -226,13 +311,11 @@
               <span class="tag">Conversion copy</span>
               <span class="tag">Launch strategy</span>
             </div>
-            <br>
-            <a class="work-link" href="https://ai-commerce-radar.vercel.app" rel="noopener">ai-commerce-radar.vercel.app</a>
           </div>
         </article>
 
         <article class="work-item">
-          <div class="work-no">ii.</div>
+          <div class="work-no">iii.</div>
           <div>
             <h3>LinkRescue</h3>
             <p class="work-role">SEO &amp; content engine</p>
@@ -253,7 +336,7 @@
         </article>
 
         <article class="work-item">
-          <div class="work-no">iii.</div>
+          <div class="work-no">iv.</div>
           <div>
             <h3>PaintPulse</h3>
             <p class="work-role">Outbound &amp; demo-led sales</p>
@@ -272,8 +355,11 @@
         </article>
 
         <article class="work-item">
-          <div class="work-no">iv.</div>
+          <div class="work-no">v.</div>
           <div>
+            <div class="work-visual">
+              <img src="assets/media-generation-work-craft-0-173eff09-66c9-4cda-93e2-ac74f2357105.webp" alt="Abstract illustration of a single careful brushstroke" loading="lazy" width="1200" height="675">
+            </div>
             <h3>Cut n' Roell Painting</h3>
             <p class="work-role">Owner &amp; operator, 2023–2025</p>
             <p class="desc">
@@ -354,7 +440,6 @@
               <li>Google Digital Marketing &amp; E-Commerce <span>Coursera, 2024</span></li>
               <li>Inbound Marketing <span>HubSpot Academy, 2025</span></li>
               <li>Inbound Sales <span>HubSpot Academy, 2025</span></li>
-              <li>Google Analytics 4 <span>In progress</span></li>
               <li>BComm, Marketing Management <span>University of Guelph</span></li>
             </ul>
           </div>
@@ -367,7 +452,8 @@
         <span class="microlabel">04 — Contact</span>
         <h2 class="serif">Hiring for a marketing role, or want to talk shop?</h2>
         <div class="contact-links">
-          <a class="btn btn-solid" href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a>
+          <a class="btn btn-solid" href="https://calendly.com/carson-roell/one-on-one">Book a call</a>
+          <a class="btn btn-line" href="mailto:carson.roell@gmail.com">carson.roell@gmail.com</a>
           <a class="btn btn-line" href="https://www.linkedin.com/in/carson-roell-914433254" rel="me">LinkedIn</a>
         </div>
         <p class="elsewhere">
